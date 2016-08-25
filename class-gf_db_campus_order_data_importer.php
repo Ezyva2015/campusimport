@@ -14,9 +14,7 @@ class GF_DB_CAMPUS_ORDER_DATA_IMPORTER {
 
     private $table_name = "wp_rg_campus_order_data_importer";
 
-    function __construct()
-    {
-
+    function __construct() {
     }
 
     public function getMappedDataByFormIdAndSourcePlatFrom($form_id, $source_platform) {
@@ -30,27 +28,29 @@ class GF_DB_CAMPUS_ORDER_DATA_IMPORTER {
     public function processMapping($form_id, $source_platform, $gravity_form, $data) {
         if($id = $this->isMappingExist($form_id, $source_platform)) {
             if($this->update($data, $id)) {
-                echo "<br> successfully update";
-                return false;
+                //echo "<br> successfully update";
+                //return 1;
+                return '<p>Mapping successfully updated</p>';
             } else {
-                echo "<br> failed to update";
-                return true;
+                //return 2;
+                return '<p>Mapping failed to update</p>';
             }
             // update the mapping fields
         } else {
             // add new mapping
             if($this->insert($form_id, $source_platform, $gravity_form, $data)){
-                echo "<br> successfully inserted";
-                return true;
+                //echo "<br> successfully inserted";
+                return '<p>Mapping successfully added</p>';
+                //return 3;
             } else {
-                echo "<br> failed to insert";
-                return false;
+                //echo "<br> failed to insert";
+                return '<p>Mapping failed to add</p>';
+                //return 4;
             }
         }
     }
 
     public function isMappingExist($form_id, $source_platform) {
-
         // [form_id] => 6
         // [source_platform] => BGL Simple Fund Desktop
         //
@@ -74,9 +74,8 @@ class GF_DB_CAMPUS_ORDER_DATA_IMPORTER {
         return $results;
     }
 
-    public function insert($form_id, $source_platform, $gravity_form, $data) {
+    public function insert($form_id, $source_platform, $gravity_form=null, $data) {
         global $wpdb;
-
         return $wpdb->insert(
             $this->table_name,
             array(
@@ -92,7 +91,6 @@ class GF_DB_CAMPUS_ORDER_DATA_IMPORTER {
                 '%s'
             )
         );
-
     }
 
     /**
@@ -103,10 +101,9 @@ class GF_DB_CAMPUS_ORDER_DATA_IMPORTER {
      * @return mixed
      */
     public function update($data, $id) {
-
-        print "<br> in update func";
-        print "<br>data = " . $data;
-        print "<br> id " . $id;
+        //print "<br> in update func";
+        //print "<br>data = " . $data;
+        //print "<br> id " . $id;
 
         global $wpdb;
         return $wpdb->update(
@@ -116,6 +113,19 @@ class GF_DB_CAMPUS_ORDER_DATA_IMPORTER {
             array( '%s' ),
             array( '%d' )
         );
+
+    }
+
+    public function delete_dual($form_id, $source_platform) {
+
+        $fid = intval($form_id);
+        $sp =   $source_platform;
+
+
+        print " form id " . $fid . ' sp ' . $sp;
+
+        global $wpdb;
+        return $wpdb->delete( $this->table_name , array( 'form_id' => $fid, 'source_platform'=>$sp ), array( '%d', '%s' ) );
     }
 
     public function delete($id) {

@@ -5,16 +5,16 @@ namespace GF;
 
 class GF_DBF_FIELDS {
 
-    function __construct()
-    {
+    function __construct() {
     }
 
     public function dbf_fields() {
         $gfFields = array(
 
             // Start
-            'Fund Details',
+            'Reference',
             'Fund Name',
+            'State Law To Govern The Fund',
             'Fund Address',
                 'Fund Address 1 Hidden',
                 'Fund Address 2 Hidden',
